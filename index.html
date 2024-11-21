@@ -19,32 +19,103 @@
         <section class="plants">
             <h2 class="plants__title"> Su taimed igatsesid sind! </h2>
             <ul class="plants__cards">
-                <li class="plants__card">
-                    <img src="./assets/plant.jpg " alt="Plant" class="plants__card-image">
-                    <h3 class="plants__card-title"> Nurmenukk </h3>
-                    <p class="plants__card-paragraph"> Nurmenukk on Eestis looduslikult kasvav taim, mis on tuntud oma ilu ja vastupidavuse poolest. </p>
-                </li>
-                <li class="plants__card">
-                    <img src="./assets/plant.jpg " alt="Plant" class="plants__card-image">
-                    <h3 class="plants__card-title"> Nurmenukk </h3>
-                    <p class="plants__card-paragraph"> Nurmenukk on Eestis looduslikult kasvav taim, mis on tuntud oma ilu ja vastupidavuse poolest. </p>
-                </li>
-                <li class="plants__card">
-                    <img src="./assets/plant.jpg " alt="Plant" class="plants__card-image">
-                    <h3 class="plants__card-title"> Nurmenukk </h3>
-                    <p class="plants__card-paragraph"> Nurmenukk on Eestis looduslikult kasvav taim, mis on tuntud oma ilu ja vastupidavuse poolest. </p>
-                </li>
-                <li class="plants__card">
-                    <img src="./assets/plant.jpg " alt="Plant" class="plants__card-image">
-                    <h3 class="plants__card-title"> Nurmenukk </h3>
-                    <p class="plants__card-paragraph"> Nurmenukk on Eestis looduslikult kasvav taim, mis on tuntud oma ilu ja vastupidavuse poolest. </p>
-                </li>
-                <li class="plants__card">
-                    <img src="./assets/plant.jpg " alt="Plant" class="plants__card-image">
-                    <h3 class="plants__card-title"> Nurmenukk </h3>
-                    <p class="plants__card-paragraph"> Nurmenukk on Eestis looduslikult kasvav taim, mis on tuntud oma ilu ja vastupidavuse poolest. </p>
-                </li>
             </ul>
         </section>
+        <section class="add-form">
+            <div class="add-form_container">
+                <h2 class="add-form__title">Lisa uus taim</h2>
+                <form class="add-form__form">
+                    <label for="plant-image">Vali pilt</label>
+                    <input type="file" id="plant-image" name="plant-image" accept="image/png, image/jpeg" required/>
+
+                    <label for="plant-name">Taime nimi*</label>
+                    <input type="text" id="plant-name" name="plant-name" placeholder="Sisesta taime nimi" required/>
+
+                    <label for="plant-description">Kirjeldus*</label>
+                    <input type="text" id="plant-description" name="plant-description" size="40" placeholder="Lisa oma taime hooldamise kirjeldus" required/>
+
+                    <input class="add-form_submit" type="submit" value="Lisa taim"/>
+                </form>
+            </div>
+        </section>
+        <script>
+            //variable definition
+            const form = document.querySelector('.add-form__form');
+            let plants = []
+            if (localStorage.getItem('plants')) {
+                plants = JSON.parse(localStorage.getItem('plants'));
+            }
+
+            //Function definition
+            const addCardToDom = (plant) => {
+                const card = document.createElement('li');
+                card.classList.add('plants__card');
+
+                const image = document.createElement('img');
+                image.classList.add('plants__card-image');
+                image.src = plant.image;
+
+                const title = document.createElement('h3');
+                title.classList.add('plants__card_title');
+                title.textContent = plant.name;
+
+                const paragraph = document.createElement('p');
+                paragraph.classList.add('plants__card-paragraph');
+                paragraph.textContent = plant.description;
+
+                card.appendChild(image);
+                card.appendChild(title);
+                card.appendChild(paragraph);
+
+                const cards = document.querySelector('.plants__cards');
+                cards.appendChild(card);
+            };
+
+            const addCard = (plant) => {
+                //add plant card to dom visually
+                addCardToDom(plant);
+
+                //add plant data to plants array to sync state
+                plants.push(plant)
+
+                //Add plant data to local storage
+                localStorage.setItem('plants', JSON.stringify(plants));
+            };
+
+            //Display plants for local storage
+            plants.forEach((plant)=>{
+                console.log(plant)
+                addCardToDom(plant)
+            });
+
+            //Event listener
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const plantImageInput = document.querySelector('#plant-image')
+                const plantNameInput = document.querySelector('#plant-name');
+                const plantDescriptionInput = document.querySelector('#plant-description');
+
+                const plantImage = plantImageInput.files[0];
+                const plantName = plantNameInput.value;
+                const plantDescription = plantDescriptionInput.value;
+
+                //Add card once image is converted to base64 format.
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const plant = {
+                        image: event.target.result,
+                        name: plantName,
+                        description: plantDescription
+                    }
+
+                    addCard(plant);
+                }
+                reader.readAsDataURL(plantImage)
+
+
+                form.reset();
+            });
+        </script>
     </body>
 </html>

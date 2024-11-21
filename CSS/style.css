@@ -90,6 +90,89 @@ section {
     margin-top: 8px;
 }
 
+.add-form {
+    background-color: #466B48;
+    color: #FFF7EB;
+}
+
+.add-form_container {
+    max-width: 1312px;
+    margin: 0 auto;
+}
+
+.add-form_submit {
+    margin-top: 16px;
+}
+
+label {
+    display: block;
+    margin-top: 16px;
+}
+
+input {
+    display: block;
+    margin-top: 8px;
+}
+
+/* file upload button */
+input[type="file"]::file-selector-button {
+    color: #466B48;
+    border-radius: 16px;
+    height: 32px;
+    cursor: pointer;
+    background-color: #FFF7EB;
+    border: 1px solid #466B48;
+    margin-right: 8px;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* file upload button hover state */
+input[type="file"]::file-selector-button:hover {
+    background-color: #7D967C ;
+    color: #FFF7EB;
+}
+
+/* file upload button active state */
+input[type="file"]::file-selector-button:active {
+    transform: scale(0.95);
+}
+
+/* input text area */
+input[type=text], select {
+    background-color: #FFF7EB;
+    color: #7D967C;
+    width: 100%;
+    height: 56px;
+    padding: 22px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Submit button */
+input[type="submit"] {
+    color: #466B48;
+    border-radius: 16px;
+    height: 52px;
+    min-width: 118px;
+    cursor: pointer;
+    background-color: #FFF7EB;
+    border: 1px solid #466B48;
+    transition: background-color 200ms ease, color 2ms ease;
+}
+
+/* Submit button hover state */
+input[type="submit"]:hover {
+    background-color: #7D967C;
+    color: #FFF7EB;
+}
+
+/* Submit button active state */
+input[type="submit"]:active {
+    background-color: #FFF7EB;
+    transform: scale(0.95);
+}
+
 /* Phone styles */
 @media screen and (max-width: 1000px) {
     h1 {

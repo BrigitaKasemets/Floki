@@ -54,7 +54,6 @@
                 const image = document.createElement('img');
                 image.classList.add('plants__card-image');
                 image.src = plant.image;
-
                 const title = document.createElement('h3');
                 title.classList.add('plants__card_title');
                 title.textContent = plant.name;
@@ -84,7 +83,6 @@
 
             //Display plants for local storage
             plants.forEach((plant)=>{
-                console.log(plant)
                 addCardToDom(plant)
             });
 

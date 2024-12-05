@@ -51,6 +51,7 @@
                 const card = document.createElement('li');
                 card.classList.add('plants__card');
 
+                debugger
                 const image = document.createElement('img');
                 image.classList.add('plants__card-image');
                 image.src = plant.image;
@@ -87,33 +88,33 @@
             });
 
             //Event listener
-            form.addEventListener('submit', (event) => {
-                event.preventDefault();
+            form.addEventListener('submit',
+                (event) => {
+                    event.preventDefault();
 
-                const plantImageInput = document.querySelector('#plant-image')
-                const plantNameInput = document.querySelector('#plant-name');
-                const plantDescriptionInput = document.querySelector('#plant-description');
+                    const plantImageInput = document.querySelector('#plant-image')
+                    const plantNameInput = document.querySelector('#plant-name');
+                    const plantDescriptionInput = document.querySelector('#plant-description');
 
-                const plantImage = plantImageInput.files[0];
-                const plantName = plantNameInput.value;
-                const plantDescription = plantDescriptionInput.value;
+                    const plantImage = plantImageInput.files[0];
+                    const plantName = plantNameInput.value;
+                    const plantDescription = plantDescriptionInput.value;
+                    //Add card once image is converted to base64 format.
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const plant = {
+                            image: event.target.result,
+                            name: plantName,
+                            description: plantDescription
+                        }
 
-                //Add card once image is converted to base64 format.
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const plant = {
-                        image: event.target.result,
-                        name: plantName,
-                        description: plantDescription
+                        addCard(plant);
                     }
-
-                    addCard(plant);
-                }
-                reader.readAsDataURL(plantImage)
+                    reader.readAsDataURL(plantImage)
 
 
-                form.reset();
-            });
+                    form.reset();
+                });
         </script>
     </body>
 </html>

@@ -58,6 +58,7 @@ section {
 }
 
 .plants__card {
+    position: relative;
     padding: 24px;
     border: 2px solid #466B48;
     border-radius: 16px;
@@ -88,6 +89,19 @@ section {
 
 .plants__card-paragraph{
     margin-top: 8px;
+}
+
+.plants__card-delete{
+    position: absolute;
+    top:1px;
+    right: 8px;
+    margin-top: 16px;
+    color: #466B48;
+    border-radius: 16px;
+    height: 32px;
+    background-color: #FFF7EB;
+    border: 1px solid #466B48;
+    cursor: pointer;
 }
 
 .add-form {

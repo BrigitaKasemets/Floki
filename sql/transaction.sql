@@ -21,7 +21,6 @@ BEGIN;
 -- add a new plant
 INSERT INTO plant (id, name, species_id, date_added, location) VALUES ( 6, 'Havisaba', '1', '2020-01-01', 'Living Room');
 
-
 -- add watering (it will fail)
 INSERT INTO watering (id, plant_id, watering_date)
 VALUES (999, '2024-12-12');

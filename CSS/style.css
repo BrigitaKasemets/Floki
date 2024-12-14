@@ -104,6 +104,62 @@ section {
     cursor: pointer;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* Lubab kerimist, kui sisu ületab kõrguse */
+    padding: 20px;
+}
+
+.modal__content {
+    background: #FFF7EB;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 1200px;
+    max-height: 90%;
+    overflow: auto; /* Lubab kerimist, kui sisu ületab kõrguse */
+    box-sizing: border-box;
+}
+
+.modal__image {
+    max-width: 1000px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+
+.modal__title {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.modal__description {
+    font-size: 14px;
+}
+
+.modal__close {
+    position: initial;
+    font-size: 30px;
+    cursor: pointer; /* Muuda kursor käeks */
+    color: #7D967C ;
+    background: none;
+    border: none;
+    padding: 5px;
+    z-index: 10;
+}
+
+.modal__close:hover {
+    color:#466B48; /* Muuda nupu värv tumedamaks hover'i ajal */
+}
+
 .add-form {
     background-color: #466B48;
     color: #FFF7EB;
@@ -209,5 +265,9 @@ input[type="submit"]:active {
     .plants__cards {
         margin-top: 24px;
         gap: 16px;
+    }
+
+    .modal__image {
+        max-width: 100%;
     }
 }

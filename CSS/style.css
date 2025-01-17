@@ -115,7 +115,6 @@ section {
     justify-content: center;
     align-items: center;
     overflow: auto; /* Lubab kerimist, kui sisu ületab kõrguse */
-    padding: 20px;
 }
 
 .modal__content {

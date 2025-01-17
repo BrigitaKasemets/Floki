@@ -1,0 +1,85 @@
+services:
+  # MariaDB
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./docker-volumes/mariadb:/var/lib/mysql
+
+  # MySQL
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./docker-volumes/mysql:/var/lib/mysql
+
+  # PostgreSQL
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-volumes/postgres:/var/lib/postgresql/data
+
+  # MongoDB
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: testdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./docker-volumes/mongodb:/data/db
+
+  # MSSQL
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    platform: linux/amd64
+    user: "10001:0"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "123@Password"
+      SA_PASSWORD: "123@Password"
+
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  # Redis
+  redis:
+    image: redis:latest
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "no"
+      REDIS_PASSWORD: "123"
+    volumes:
+      - ./sql/redis/dump.rdb:/data/dump.rdb
+
+volumes:
+  mssql_data:
+  mysql_data:
+  mariadb_data:
+  postgres_data:
+  mongodb_data:
+  redis_data:

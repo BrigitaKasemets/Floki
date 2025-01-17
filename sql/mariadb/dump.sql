@@ -1,7 +1,7 @@
 /*M!999999\- enable the sandbox mode */ 
 -- MariaDB dump 10.19-11.5.2-MariaDB, for osx10.20 (arm64)
 --
--- Host: localhost    Database: plants
+-- Host: localhost    Database: testdb
 -- ------------------------------------------------------
 -- Server version	11.5.2-MariaDB
 

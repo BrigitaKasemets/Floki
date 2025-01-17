@@ -94,28 +94,29 @@ form.addEventListener('submit', (event) => {
     form.reset();
 });
 
-// Leidke modaal ja selle elemendid
+// modaal ja selle elemendid
 const modal = document.getElementById('plant-modal');
 const modalImage = document.getElementById('modal-image');
 const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const closeModal = document.querySelector('.modal__close');
 
-// Funktsioon kaardile klikkimise käsitlemiseks
+// Funktsioon, mis avab modaalakna
 const openModal = (plant) => {
     modalImage.src = plant.image;
     modalTitle.textContent = plant.name;
     modalDescription.textContent = plant.description;
-    modal.style.display = 'flex'; // Näita modaal
+    // Näita modaalakent
+    modal.style.display = 'flex';
 };
 
 
-// Lisage nupule klõpsamisürituse kuulaja
+// Sulge modaalaken nupu event listener klikil
 closeModal.addEventListener('click', () => {
-    modal.style.display = 'none'; // Peida modaal
+    modal.style.display = 'none'; // Peida modaalaken
 });
 
-// Lisa iga kaardi jaoks event listener
+// Sulge modaalaken kui kasutaja vajutab kuskile mujale
 const cardsContainer = document.querySelector('.plants__cards');
 
 cardsContainer.addEventListener('click', (event) => {
@@ -124,7 +125,6 @@ cardsContainer.addEventListener('click', (event) => {
         // Leia kaardi andmed DOM-ist
         const plantIndex = Array.from(cardsContainer.children).indexOf(card);
         const plant = plants[plantIndex];
-
-        openModal(plant);
+        if (plant) openModal(plant);
     }
 });

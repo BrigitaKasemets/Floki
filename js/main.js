@@ -1,84 +1,173 @@
-// Variable definition
-const form = document.querySelector('.add-form__form');
+// MUUTUJATE DEFINITSIOONID 
+// jQuery viide vormile
+const $form = $('.add-form__form');
+
+// Taimede massiiv, mis hoiab kõiki lisatud taimi
 let plants = [];
+
+// Lae olemasolevad taimed localStorage'ist kui neid on
 if (localStorage.getItem('plants')) {
     plants = JSON.parse(localStorage.getItem('plants'));
 }
 
-// Function to add a card to DOM
+// KAARTIDE HALDAMISE FUNKTSIOONID
+/**
+ * Lisab ühe taimekaardi DOM'i
+ * @param {Object} plant - Taime andmed (pilt, nimi, kirjeldus)
+ * @param {number} index - Taime indeks massiivis
+ */
 const addCardToDom = (plant, index) => {
-    const card = document.createElement('li');
-    card.classList.add('plants__card');
+    // Loo uus kaart jQuery abil
+    const $card = $('<li>').addClass('plants__card');
+    
+    // Loo ja seadista taime pilt
+    const $image = $('<img>')
+        .addClass('plants__card-image')
+        .attr('src', plant.image);
 
-    const image = document.createElement('img');
-    image.classList.add('plants__card-image');
-    image.src = plant.image;
+    // Loo ja seadista taime pealkiri
+    const $title = $('<h3>')
+        .addClass('plants__card-title')
+        .text(plant.name);
 
-    const title = document.createElement('h3');
-    title.classList.add('plants__card-title');
-    title.textContent = plant.name;
+    // Loo ja seadista taime kirjeldus
+    const $paragraph = $('<p>')
+        .addClass('plants__card-paragraph')
+        .text(plant.description);
 
-    const paragraph = document.createElement('p');
-    paragraph.classList.add('plants__card-paragraph');
-    paragraph.textContent = plant.description;
+    // Loo ja seadista kustutamise nupp
+    const $deleteButton = $('<button>')
+        .text('Kustuta')
+        .addClass('plants__card-delete')
+        .attr('data-index', index)
+        .on('click', function() {
+            deletePlant($(this).data('index'));
+        });
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Kustuta';
-    deleteButton.classList.add('plants__card-delete');
-    deleteButton.dataset.index = index; // Save the index for identifying which plant to delete
-
-    deleteButton.addEventListener('click', (event) => {
-        const plantIndex = event.target.dataset.index;
-        deletePlant(plantIndex); // Call delete function
-    });
-
-    card.appendChild(image);
-    card.appendChild(title);
-    card.appendChild(paragraph);
-    card.appendChild(deleteButton);
-
-    const cards = document.querySelector('.plants__cards');
-    cards.appendChild(card);
+    // Lisa kõik elemendid kaardile ja kaart DOM'i
+    $card.append($image, $title, $paragraph, $deleteButton);
+    $('.plants__cards').append($card);
 };
 
-// Function to delete a plant card
+/**
+ * Kustutab taime massiivist ja localStorage'ist
+ * @param {number} index - Kustutatava taime indeks
+ */
 const deletePlant = (index) => {
-    plants.splice(index, 1); // Remove the plant from array
-    localStorage.setItem('plants', JSON.stringify(plants)); // Update localStorage
-    renderPlants(); // Re-render the plant cards
+    plants.splice(index, 1); // Eemalda taim massiivist
+    localStorage.setItem('plants', JSON.stringify(plants)); // Uuenda localStorage
+    renderPlants(); // Joonista kaardid uuesti
 };
 
-// Function to render all plant cards
+// Kuvab kõik taimed DOM'is
 const renderPlants = () => {
     const cards = document.querySelector('.plants__cards');
-    cards.innerHTML = ''; // Clear existing cards
+    cards.innerHTML = ''; // Puhasta olemasolevad kaardid
     plants.forEach((plant, index) => {
-        addCardToDom(plant, index); // Re-add each plant
+        addCardToDom(plant, index); // Lisa iga taim uuesti
     });
 };
 
-// Add new plant card
+/**
+ * Lisab uue taime massiivi ja localStorage'isse
+ * @param {Object} plant - Lisatava taime andmed
+ */
 const addCard = (plant) => {
-    plants.push(plant); // Add plant to array
-    localStorage.setItem('plants', JSON.stringify(plants)); // Save to localStorage
-    renderPlants(); // Update the DOM
+    plants.push(plant); // Lisa taim massiivi
+    localStorage.setItem('plants', JSON.stringify(plants)); // Salvesta localStorage'isse
+    renderPlants(); // Uuenda vaadet
 };
 
-// Display existing plants from localStorage
+// Kuva olemasolevad taimed kohe lehe laadimisel
 renderPlants();
 
-// Form event listener for adding a new plant
-form.addEventListener('submit', (event) => {
+// VORMI VALIDEERIMISE FUNKTSIOONID
+/**
+ * Kontrollib vormi sisendite korrektsust
+ * @param {File} plantImage - Üleslaetud pildifail
+ * @param {string} plantName - Taime nimi
+ * @param {string} plantDescription - Taime kirjeldus
+ * @returns {boolean} - Kas vorm on korrektselt täidetud
+ */
+const validateForm = (plantImage, plantName, plantDescription) => {
+    // Kontrolli, kas kõik väljad on täidetud
+    if (!plantImage || !plantName || !plantDescription) {
+        console.log('Validation failed: All fields are required');
+        return false;
+    }
+
+    // Kontrolli nime pikkust
+    if (plantName.length < 2) {
+        console.log('Validation failed: Plant name must be at least 2 characters long');
+        return false;
+    }
+
+    // Kontrolli kirjelduse pikkust
+    if (plantDescription.length < 10) {
+        console.log('Validation failed: Description must be at least 10 characters long');
+        return false;
+    }
+
+    // Kontrolli pildi formaati
+    const allowedTypes = ['image/jpeg', 'image/png'];
+    if (!allowedTypes.includes(plantImage.type)) {
+        console.log('Validation failed: File must be a JPEG or PNG image');
+        return false;
+    }
+
+    console.log('Form validation passed successfully');
+    return true;
+};
+
+/**
+ * Kuvab veateate vormis
+ * @param {string} message - Veateate tekst
+ */
+const showError = (message) => {
+    const $errorDiv = $('<div>')
+        .addClass('error-message')
+        .text(message);
+    
+    $form.prepend($errorDiv);
+
+    // Eemalda veateade 3 sekundi pärast
+    setTimeout(() => {
+        $errorDiv.fadeOut(400, function() {
+            $(this).remove();
+        });
+    }, 3000);
+};
+
+//VORMI TÖÖTLEMINE 
+// Vormi esitamise kuulaja
+$form.on('submit', function(event) {
     event.preventDefault();
 
-    const plantImageInput = document.querySelector('#plant-image');
-    const plantNameInput = document.querySelector('#plant-name');
-    const plantDescriptionInput = document.querySelector('#plant-description');
+    // Eemalda vanad veateated
+    $('.error-message').remove();
 
-    const plantImage = plantImageInput.files[0];
-    const plantName = plantNameInput.value;
-    const plantDescription = plantDescriptionInput.value;
+    // Hangi vormi väljad
+    const $plantImageInput = $('#plant-image');
+    const $plantNameInput = $('#plant-name');
+    const $plantDescriptionInput = $('#plant-description');
 
+    // Hangi väljade väärtused
+    const plantImage = $plantImageInput[0].files[0];
+    const plantName = $plantNameInput.val().trim();
+    const plantDescription = $plantDescriptionInput.val().trim();
+
+    // Valideeri vorm
+    if (!validateForm(plantImage, plantName, plantDescription)) {
+        showError('Palun täida kõik väljad korrektselt!');
+        return;
+    }
+
+    console.log('Adding new plant:', {
+        name: plantName,
+        description: plantDescription
+    });
+
+    // Loe pildifail ja lisa uus taim
     const reader = new FileReader();
     reader.onload = (event) => {
         const plant = {
@@ -87,44 +176,40 @@ form.addEventListener('submit', (event) => {
             description: plantDescription,
         };
 
-        addCard(plant); // Add the new plant
+        addCard(plant);
+        console.log('Plant added successfully');
     };
     reader.readAsDataURL(plantImage);
 
-    form.reset();
+    $form.reset();
 });
 
-// modaal ja selle elemendid
-const modal = document.getElementById('plant-modal');
-const modalImage = document.getElementById('modal-image');
-const modalTitle = document.getElementById('modal-title');
-const modalDescription = document.getElementById('modal-description');
-const closeModal = document.querySelector('.modal__close');
+// MODAALAKNA FUNKTSIOONID
+// jQuery viited modaalakna elementidele
+const $modal = $('#plant-modal');
+const $modalImage = $('#modal-image');
+const $modalTitle = $('#modal-title');
+const $modalDescription = $('#modal-description');
 
-// Funktsioon, mis avab modaalakna
+/**
+ * Avab modaalakna taime andmetega
+ * @param {Object} plant - Kuvatava taime andmed
+ */
 const openModal = (plant) => {
-    modalImage.src = plant.image;
-    modalTitle.textContent = plant.name;
-    modalDescription.textContent = plant.description;
-    // Näita modaalakent
-    modal.style.display = 'flex';
+    $modalImage.attr('src', plant.image);
+    $modalTitle.text(plant.name);
+    $modalDescription.text(plant.description);
+    $modal.fadeIn();
 };
 
-
-// Sulge modaalaken nupu event listener klikil
-closeModal.addEventListener('click', () => {
-    modal.style.display = 'none'; // Peida modaalaken
+// Sulge modaalaken nupuvajutusel
+$('.modal__close').on('click', function() {
+    $modal.fadeOut();
 });
 
-// Sulge modaalaken kui kasutaja vajutab kuskile mujale
-const cardsContainer = document.querySelector('.plants__cards');
-
-cardsContainer.addEventListener('click', (event) => {
-    const card = event.target.closest('.plants__card');
-    if (card) {
-        // Leia kaardi andmed DOM-ist
-        const plantIndex = Array.from(cardsContainer.children).indexOf(card);
-        const plant = plants[plantIndex];
-        if (plant) openModal(plant);
-    }
+// Ava modaalaken kaardi klõpsamisel
+$('.plants__cards').on('click', '.plants__card', function() {
+    const index = $(this).index();
+    const plant = plants[index];
+    if (plant) openModal(plant);
 });

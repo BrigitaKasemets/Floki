@@ -49,8 +49,7 @@ const addCardToDom = (plant, index) => {
     $('.plants__cards').append($card);
 };
 
-/**
- * Kustutab taime massiivist ja localStorage'ist
+/** Kustutab taime massiivist ja localStorage'ist
  * @param {number} index - Kustutatava taime indeks
  */
 const deletePlant = (index) => {
@@ -68,8 +67,7 @@ const renderPlants = () => {
     });
 };
 
-/**
- * Lisab uue taime massiivi ja localStorage'isse
+/** Lisab uue taime massiivi ja localStorage'isse
  * @param {Object} plant - Lisatava taime andmed
  */
 const addCard = (plant) => {
